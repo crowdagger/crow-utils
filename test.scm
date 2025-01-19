@@ -49,6 +49,25 @@
     (cons v l))
   (test-assert (add-to-list2 '(foo) 42))
   (test-error (add-to-list2 '() 42))
+
+  (define-checked (complicated [a string?]
+                               [b number?]
+                               [c list?]
+                               [d procedure?]
+                               [e boolean?])
+    42)
+  (test-assert (complicated "Foo" 2 '(bar) (lambda (x) x) #f))
+  (test-error (complicated "Foo" 2 "bar" #f 1.0))
+
+  (define-checked (complicated2 [a string?]
+                               b
+                               [c list?]
+                               d
+                               [e boolean?])
+    42)
+  (test-assert (complicated2 "Foo" 2 '(bar) (lambda (x) x) #f))
+  (test-error (complicated2 "Foo" 2 "bar" #f 1.0))
+  (test-error (complicated2 "Foo" 2 '(bar) 3 1.0))
   )
 
 (test-end "Checked")
