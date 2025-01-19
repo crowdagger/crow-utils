@@ -122,7 +122,7 @@
              (assert ret_pred return)
              return)))
         ((_ (name args ...) (test ... -> ret_pred) body body* ...)
-         (deefn (name args ...) (test ... -> ret_pred) #:doc "" body body* ...))
+         (defn (name args ...) (test ... -> ret_pred) #:doc "" body body* ...))
         ((_ (name args ...) (test ...) #:doc doc body body* ...)
          (defn (name args ...) (test ... -> (const #t)) #:doc doc body body* ...))
         ((_ (name args ...) (test ...) body body* ...)
