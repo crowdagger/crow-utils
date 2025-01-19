@@ -34,7 +34,7 @@
            (assert-list (p* ...) (v* ...))))
         ((_ (p p+ ...) ())
          (syntax-error "Supplied more predicates than there is arguments"))
-        ((_ () (v v*))
+        ((_ () (v v* ...))
          (syntax-error "Supplied more arguments than predicates"))
         ))
          
