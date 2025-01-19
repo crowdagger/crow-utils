@@ -1,12 +1,13 @@
 (install-r7rs!)
 
+
 (define-library (crow-utils defn)
   (import (scheme base)
           (srfi srfi-1)
           (srfi srfi-28))
-  (export defn ->)
+  (export defn ->
+          lambda-checked values-checked define-checked)
   (begin
-    
     (define-syntax assert
       (syntax-rules ()
         ((_ pred val)
@@ -38,6 +39,64 @@
     
     ;; Ok this is probably not a good idea?
     (define-syntax -> (syntax-rules ()))
+    (define-syntax : (syntax-rules ()))
+
+    ;;; Largely inspired by SRFI-253 example implementation
+    ;;; seeee https://srfi.schemers.org/srfi-253/srfi/impl.scm
+    (define-syntax %lambda-checked
+     (syntax-rules ()
+       ((_ (doc body ...) args (checks ...) ())
+        (lambda args
+          doc
+          checks ...
+          body ...))
+       ((_ (doc body) (args ...) (checks ...) ((arg pred) . rest))
+        (%lambda-checked
+         (doc body)
+         (args ... arg) (checks ... (assert pred arg)) rest))
+       ((_ (doc body) (args ...) (checks ...) (arg . rest))
+        (%lambda-checked
+         (doc body)
+         (args ... arg) (checks ...) rest))
+       ((_ (doc body) (args ...) (checks ...) last)
+        (%lambda-checked
+         (doc body)
+         (args ... . last) (checks ...) ()))))
+
+    ;; Idem here
+    (define-syntax lambda-checked
+    (syntax-rules ()
+      ((_ () body ...)
+       (lambda () body ...))
+      ((_ (arg . args) body ...)
+       (%lambda-checked (body ...) () () (arg . args)))
+      ;; Case of arg->list lambda, no-op.
+      ((_ arg body ...)
+       (lambda arg body ...))))
+
+    ;;; And here
+    (define-syntax values-checked
+     (syntax-rules ()
+       ((_ (predicate) value)
+        (let ((v value))
+          (assert predicate v)
+          v))
+       ((_ (predicate ...) value ...)
+        (values (values-checked (predicate) value) ...))))
+
+    ;; And again here, really a copy/paste, sorry
+    (define-syntax define-checked
+     (syntax-rules ()
+       ;; Procedure
+       ((_ (name args ...) #:doc doc body ...)
+        (define name (%lambda-checked ( doc body ...) () () (args ...))))
+       ((_ (name args ...) body ...)
+        (define-checked (name args ...) #:doc "" body ...))
+       ;; Variable
+       ((_ name pred value)
+        (define name (values-checked (pred) value)))))
+
+    
 
     ;;;; Variant of define, allowing to specify in and output "types" as predicates,
     ;;;; with a syntax that looks a bit like static typing but is more like a contract:
