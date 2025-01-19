@@ -69,8 +69,10 @@
     (syntax-rules ()
       ((_ () body ...)
        (lambda () body ...))
+      ((_ (arg . args) #:doc doc body ...)
+       (%lambda-checked (doc body ...) () () (arg . args)))
       ((_ (arg . args) body ...)
-       (%lambda-checked (body ...) () () (arg . args)))
+       (%lambda-checked ("" body ...) () () (arg . args)))
       ;; Case of arg->list lambda, no-op.
       ((_ arg body ...)
        (lambda arg body ...))))
@@ -95,7 +97,9 @@
         (define-checked (name args ...) #:doc "" body ...))
        ;; Variable
        ((_ name pred value)
-        (define name (values-checked (pred) value)))))
+        (define name (values-checked (pred) value)))
+       ((_ ...)
+        (syntax-error "Wrong syntax for define-checked"))))
 
 
     ;; Ok this is probably not a good idea?

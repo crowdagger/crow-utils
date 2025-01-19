@@ -26,18 +26,29 @@
   (test-assert (complicated "Foo" 2 '(bar) (lambda (x) x) #f))
   (test-error (complicated "Foo" 2 "bar" #f 1.0))
   )
+
+
+(test-group "define-checked"
+  (define-checked (add [x number?] [y number?])
+    (+ x y))
+
+  (test-assert (add 2 3))
+  (test-error (add "foo" 3))
+
+  (define-checked (add-to-list [l list?] [i integer?])
+    (cons i l))
+  (test-assert (add-to-list '(3) 2))
+
+  (define-checked (add2 [x integer?] [y integer?])
+    #:doc "foo"
+    (+ x y))
+  (test-assert (add2 3 2))
+  (test-error (add2 3 "boo"))
+
+  (define-checked (add-to-list2 [l pair?] v)
+    (cons v l))
+  (test-assert (add-to-list2 '(foo) 42))
+  (test-error (add-to-list2 '() 42))
+  )
+
 (test-end "Checked")
-
-(defn (double x)
-  (number? -> number?)
-  #:doc "Doubles a number"
-  (* 2 x))
-
-(double 42)
-
-
-(define-checked (add [x number?] [y number?])
-  (+ x y))
-
-(add 2 3)
-
