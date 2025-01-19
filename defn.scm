@@ -2,14 +2,36 @@
 
 (define-library (crow-utils defn)
   (import (scheme base)
-          (srfi srfi-1))
+          (srfi srfi-1)
+          (srfi srfi-28))
   (export defn ->)
   (begin
-    (define (assert pred? val)
-      "Throws an exception if val does not satisfy pred"
-      (when (not (pred? val))
-        (error "Value does not satisfy predicate" val pred?)))
+    
+    (define-syntax assert
+      (syntax-rules ()
+        ((_ pred val)
+         (unless (pred val)
+           (error (format "~a (value: ~a) does not satisfy ~a"
+                   (quote val)
+                   val
+                   (quote pred)))))
+        ((_ pred val rest ...)
+         (begin
+           (assert2 pred val)
+           (assert2 rest ...)))
+        ((_ rest)
+         (syntax-error "assert takes an even number of arguments"))
+        ))
 
+    (define-syntax assert-list
+      (syntax-rules ()
+        ((_ () ())
+         '())
+        ((_ (p p* ...) (v v* ...))
+         (begin
+           (assert p v)
+           (assert-list (p* ...) (v* ...))))))
+         
     (define (const x)
       (lambda args x))
 
@@ -25,9 +47,8 @@
         ((_ (name args ...) (test ... -> ret_pred) #:doc doc body body* ...)
          (define (name args ...)
            doc
-           (map assert
-                (list test ...)
-                (list args ...))
+           (assert-list (list test ...)
+                        (list args ...))
            (let ((return 
                   (begin 
                     body
