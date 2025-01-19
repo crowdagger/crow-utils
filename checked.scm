@@ -31,17 +31,18 @@
         ((_ (p p* ...) (v v* ...))
          (begin
            (assert p v)
-           (assert-list (p* ...) (v* ...))))))
+           (assert-list (p* ...) (v* ...))))
+        ((_ (p p+ ...) ())
+         (syntax-error "Supplied more predicates than there is arguments"))
+        ((_ () (v v*))
+         (syntax-error "Supplied more arguments than predicates"))
+        ))
          
     (define (const x)
       (lambda args x))
 
     
-    ;; Ok this is probably not a good idea?
-    (define-syntax -> (syntax-rules ()))
-    (define-syntax : (syntax-rules ()))
-
-    ;;; Largely inspired by SRFI-253 example implementation
+   ;;; Largely inspired by SRFI-253 example implementation
     ;;; seeee https://srfi.schemers.org/srfi-253/srfi/impl.scm
     (define-syntax %lambda-checked
      (syntax-rules ()
@@ -96,6 +97,11 @@
        ((_ name pred value)
         (define name (values-checked (pred) value)))))
 
+
+    ;; Ok this is probably not a good idea?
+    (define-syntax -> (syntax-rules ()))
+
+    
     
 
     ;;;; Variant of define, allowing to specify in and output "types" as predicates,
