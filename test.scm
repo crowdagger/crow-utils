@@ -1,6 +1,13 @@
 (add-to-load-path "..")
-(use-modules (crow-utils defn))
+(import (crow-utils checked))
 
-(defn (f x) (number? -> string?) (* x 2))
+(defn (double x)
+  (number? -> number?)
+  #:doc "Doubles a number"
+  (* 2 x))
 
-(f 2)
+(double 42)
+
+
+(define-checked (add [x number?] [y number?])
+  (+ x y))

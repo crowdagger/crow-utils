@@ -12,7 +12,7 @@
       (syntax-rules ()
         ((_ pred val)
          (unless (pred val)
-           (error (format "~a (value: ~a) does not satisfy ~a"
+           (error (format "~a (value: ~s) does not satisfy ~a"
                    (quote val)
                    val
                    (quote pred)))))
