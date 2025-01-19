@@ -1,7 +1,7 @@
 (install-r7rs!)
 
 
-(define-library (crow-utils defn)
+(define-library (crow-utils checked)
   (import (scheme base)
           (srfi srfi-1)
           (srfi srfi-28))
@@ -84,7 +84,7 @@
        ((_ (predicate ...) value ...)
         (values (values-checked (predicate) value) ...))))
 
-    ;; And again here, really a copy/paste, sorry
+    ;; And again here
     (define-syntax define-checked
      (syntax-rules ()
        ;; Procedure
