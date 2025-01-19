@@ -10,6 +10,9 @@
       (when (not (pred? val))
         (error "Value does not satisfy predicate" val pred?)))
 
+    (define (const x)
+      (lambda args x))
+
     
     ;; Ok this is probably not a good idea?
     (define-syntax -> (syntax-rules ()))
@@ -34,7 +37,13 @@
              (assert ret_pred return)
              return)))
         ((_ (name args ...) (test ... -> ret_pred) body body* ...)
-         (defn (name args ...) (test ... -> ret_pred) #:doc "" body body* ...)) 
-        ))
+         (deefn (name args ...) (test ... -> ret_pred) #:doc "" body body* ...))
+        ((_ (name args ...) (test ...) #:doc doc body body* ...)
+         (defn (name args ...) (test ... -> (const #t)) #:doc doc body body* ...))
+        ((_ (name args ...) (test ...) body body* ...)
+         (defn (name args ...) (test ... -> (const #t)) #:doc "" body body* ...))
+         ((_ args ...)
+          (syntax-error "Wrong arguments to defn")))
+      )
     ))
 
