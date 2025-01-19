@@ -1,34 +1,40 @@
-(define-module (crow-utils defn)
-  #:export (defn
-             ->))
+(install-r7rs!)
 
-;;;; Variant of define, allowing to specify in and output "types" as predicates,
-;;;; with a syntax that looks a bit like static typing but is more like a contract:
-;;;; I guess?
+(define-library (crow-utils defn)
+  (import (scheme base)
+          (srfi srfi-1))
+  (export defn ->)
+  (begin
+    (define (assert pred? val)
+      "Throws an exception if val does not satisfy pred"
+      (when (not (pred? val))
+        (error "Value does not satisfy predicate" val pred?)))
 
-(define (assert pred? val)
-  "Throws an exception if val does not satisfy pred"
-  (when (not (pred? val))
-    (raise-exception (format #f "Value '~a' does not satisfy ~a"
-                             val
-                             pred?))))
+    
+    ;; Ok this is probably not a good idea?
+    (define-syntax -> (syntax-rules ()))
 
-;; Ok this is probably not a good idea?
-(define-syntax -> (syntax-rules ()))
-
-(define-syntax defn
-  (syntax-rules (->)
-    ((_ (name args ...) (test ... -> ret_pred) body body* ...)
-     (define (name args ...)
-       (let ([all-args (list args ...)])
-         (map assert
-              (list-head (list test ...) (length all-args))
-              all-args))
-       (let ((return 
-              (begin 
-                body
-                body*
-                ...)))
-         (assert ret_pred return))
-         return))))
+    ;;;; Variant of define, allowing to specify in and output "types" as predicates,
+    ;;;; with a syntax that looks a bit like static typing but is more like a contract:
+    ;;;; I guess?
+    (define-syntax defn
+      (syntax-rules (->)
+        ((_ (name args ...) (test ... -> ret_pred) #:doc doc body body* ...)
+         (define (name args ...)
+           doc
+           (let ([all-args (list args ...)])
+             (map assert
+                  (take (list test ...) (length all-args))
+                  all-args))
+           (let ((return 
+                  (begin 
+                    body
+                    body*
+                    ...)))
+             (assert ret_pred return)
+             return)))
+        ((_ (name args ...) (test ... -> ret_pred) body body* ...)
+         (defn (name args ...) (test ... -> ret_pred) #:doc "" body body* ...)) 
+        ))
+    ))
 
