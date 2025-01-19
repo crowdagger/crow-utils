@@ -25,10 +25,9 @@
         ((_ (name args ...) (test ... -> ret_pred) #:doc doc body body* ...)
          (define (name args ...)
            doc
-           (let ([all-args (list args ...)])
-             (map assert
-                  (take (list test ...) (length all-args))
-                  all-args))
+           (map assert
+                (list test ...)
+                (list args ...))
            (let ((return 
                   (begin 
                     body
