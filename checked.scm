@@ -51,17 +51,17 @@
           doc
           checks ...
           body ...))
-       ((_ (doc body) (args ...) (checks ...) ((arg pred) . rest))
+       ((_ (doc body ...) (args ...) (checks ...) ((arg pred) . rest))
         (%lambda-checked
-         (doc body)
+         (doc body ...)
          (args ... arg) (checks ... (assert pred arg)) rest))
-       ((_ (doc body) (args ...) (checks ...) (arg . rest))
+       ((_ (doc body ...) (args ...) (checks ...) (arg . rest))
         (%lambda-checked
-         (doc body)
+         (doc body ...)
          (args ... arg) (checks ...) rest))
-       ((_ (doc body) (args ...) (checks ...) last)
+       ((_ (doc body ...) (args ...) (checks ...) (last))
         (%lambda-checked
-         (doc body)
+         (doc body ...)
          (args ... . last) (checks ...) ()))))
 
     ;; Idem here

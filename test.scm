@@ -50,6 +50,14 @@
   (test-assert (add-to-list2 '(foo) 42))
   (test-error (add-to-list2 '() 42))
 
+  (define-checked (stuff [a integer?] [b integer?] c)
+    (display a)
+    (newline)
+    (display b)
+    (newline))
+  (test-assert (stuff 3 2 'foo))
+  (test-error (stuff 'foo 3 2))
+
   (define-checked (complicated [a string?]
                                [b number?]
                                [c list?]
