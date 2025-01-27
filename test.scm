@@ -3,7 +3,8 @@
 
 (import (scheme base)
         (srfi srfi-64)
-        (crow-utils checked))
+        (crow-utils checked)
+        (crow-utils template))
 
 (test-begin "Checked")
 (test-group "defn"
@@ -79,3 +80,12 @@
   )
 
 (test-end "Checked")
+(test-begin "Template")
+(test-group "proess-template"
+  (define tpl1 (process-template "foo"))
+  (test-equal tpl1 '("foo"))
+  (test-error (process-template "foo{{bar"))
+  (define tpl2 (process-template "foo{{bar}}baz"))
+  (test-equal tpl2 '("foo" bar "baz"))
+  )
+(test-end "Template")
