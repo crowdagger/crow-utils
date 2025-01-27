@@ -1,7 +1,8 @@
 (define-library (crow-utils template)
   (import (scheme base)
-          (srfi 13))
-  (export process-template)
+          (srfi srfi-13)
+          (srfi srfi-69))
+  (export process-template apply-template)
   (begin
     (define (find-closing s)
       "Search a string for }} and returns ???"
@@ -25,4 +26,19 @@
       (unless (string? string)
         (error "Argument must be a string" string))
       (find-opening string))
+
+    (define (apply-template template context)
+      "Apply template with values given by context
+
+Context can be a hashtable or an alist."
+      (let ([dict (if (hash-table? context)
+                      context
+                      (alist->hash-table context))])
+        (apply string-append
+         (map (lambda (x)
+                (cond
+                 [(string? x) x]
+                 [(symbol? x) (hash-table-ref dict x)]
+                 [else (error "Template should be a list of string and symbols" template)]))
+              template))))
 ))

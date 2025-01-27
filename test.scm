@@ -88,4 +88,9 @@
   (define tpl2 (process-template "foo{{bar}}baz"))
   (test-equal tpl2 '("foo" bar "baz"))
   )
+
+(test-group "apply-template"
+  (define tpl2 (process-template "foo{{bar}}baz"))
+  (test-equal (apply-template tpl2 '((bar . "42"))) "foo42baz")
+  )
 (test-end "Template")
