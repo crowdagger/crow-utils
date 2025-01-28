@@ -1,6 +1,3 @@
-(install-r7rs!)
-
-
 (define-library (crow-utils checked)
   (import (scheme base)
           (srfi srfi-1)
