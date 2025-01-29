@@ -6,7 +6,7 @@
         (crow-utils checked)
         (crow-utils template))
 
-(test-begin "Checked")
+(test-begin "checked")
 (test-group "defn"
   (defn (double x)
     (number? -> number?)
@@ -78,19 +78,24 @@
   (test-error (complicated2 "Foo" 2 "bar" #f 1.0))
   (test-error (complicated2 "Foo" 2 '(bar) 3 1.0))
   )
+(test-end "checked")
 
-(test-end "Checked")
-(test-begin "Template")
-(test-group "proess-template"
+
+
+(test-begin "template")
+(test-group "process-template"
   (define tpl1 (process-template "foo"))
   (test-equal tpl1 '("foo"))
   (test-error (process-template "foo{{bar"))
   (define tpl2 (process-template "foo{{bar}}baz"))
   (test-equal tpl2 '("foo" bar "baz"))
+  ;; Test that spaces are trimmed
+  (define tpl3 (process-template "foo{{ bar   }}baz"))
+  (test-equal tpl3 tpl2)
   )
 
 (test-group "apply-template"
   (define tpl2 (process-template "foo{{bar}}baz"))
   (test-equal (apply-template tpl2 '((bar . "42"))) "foo42baz")
   )
-(test-end "Template")
+(test-end "template")

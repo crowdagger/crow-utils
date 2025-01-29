@@ -9,7 +9,9 @@
       (let ([b (string-contains s "}}")])
         (if (not b)
             (error "Unmatched opening brackets" s)
-            (cons (string->symbol (substring s 0 b))
+            (cons (string->symbol
+                   (string-trim-both (substring s 0 b)
+                                     #\ ))
                   (find-opening (substring s (+ 2 b)))))))
     
     (define (find-opening s)
