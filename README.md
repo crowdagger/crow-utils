@@ -4,6 +4,7 @@ Misc scheme utilites that I deemed vaguely useful for Scheme code I write.
 
 I try to use R7RS style but it's mostly tested on Guile. 
 
+
 ## checked
 
 ```scheme

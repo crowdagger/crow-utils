@@ -1,10 +1,8 @@
 (add-to-load-path "..")
-(install-r7rs!)
 
 (import (scheme base)
         (srfi srfi-64)
-        (crow-utils checked)
-        (crow-utils template))
+        (crow-utils checked))
 
 (test-begin "checked")
 (test-group "defn"
@@ -80,22 +78,3 @@
   )
 (test-end "checked")
 
-
-
-(test-begin "template")
-(test-group "process-template"
-  (define tpl1 (process-template "foo"))
-  (test-equal tpl1 '("foo"))
-  (test-error (process-template "foo{{bar"))
-  (define tpl2 (process-template "foo{{bar}}baz"))
-  (test-equal tpl2 '("foo" bar "baz"))
-  ;; Test that spaces are trimmed
-  (define tpl3 (process-template "foo{{ bar   }}baz"))
-  (test-equal tpl3 tpl2)
-  )
-
-(test-group "apply-template"
-  (define tpl2 (process-template "foo{{bar}}baz"))
-  (test-equal (apply-template tpl2 '((bar . "42"))) "foo42baz")
-  )
-(test-end "template")
