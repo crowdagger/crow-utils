@@ -4,6 +4,35 @@ Misc scheme utilites that I deemed vaguely useful for Scheme code I write.
 
 I try to use R7RS style but it's mostly tested on Guile. 
 
+## vec
+
+Growable vector.
+
+```scheme 
+;; Create an empty vector with two elements allocated
+;; (by default (make-vec) allocates 32)
+(define v (make-vec 2))
+
+;; add elements to v
+(v 'push! 1)
+(v 'push! 2)
+
+;; access element n
+(v 'get 0) ; => 1
+;; short form
+(v 1) ; => 2
+
+;; If v grows beside allocation, its content will be copied
+;; behind the scenes
+(v 'push! 3)
+
+(v 'length) ; => 3
+(v 'allocated) ; => 4 (allocation doubles each time it is needed)
+
+;; You can also shrink v
+(v 'pop!) ; => 3 (last value)
+(v 'length) ; => 2
+```
 
 ## checked
 
