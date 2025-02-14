@@ -30,6 +30,10 @@
             (vector-set! v current x)
             (set! current (+ 1 current))
             #t)
+          (define (v-set! i value)
+            "Sets the element i at value value"
+            (vector-set! v i value)
+            #t)
           (define (pop!)
             "Return the last element of the vector and remove it"
             (unless (positive? current)
@@ -45,6 +49,7 @@
               [('allocated) max]
               [('pop!) (pop!)]
               [('push! x) (push! x)]
+              [('set! i v) (v-set! i v)]
               [('get i) (get i)]
               [(i) (get i)]
               [else (error "Invalid arguments" args)])))]))))

@@ -95,7 +95,11 @@
   (v 'push! 3)
   (test-equal 4 (v 'allocated))
   (test-equal 3 (v 'length))
-  (test-equal 3 (v 'pop!))
+  (test-equal 3 (v 2))
+  (v 'set! 2 42)
+  (test-equal 42 (v 2))
+  (test-equal 42 (v 'pop!))
+  (test-error (v 2))
   (test-equal 2 (v 'length))
   )
 
