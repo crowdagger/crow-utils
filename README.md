@@ -22,6 +22,9 @@ Growable vector.
 ;; short form
 (v 1) ; => 2
 
+;; modify element n
+(v 'set! 0 42)
+
 ;; If v grows beside allocation, its content will be copied
 ;; behind the scenes
 (v 'push! 3)
