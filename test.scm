@@ -2,6 +2,7 @@
 
 (import (scheme base)
         (srfi srfi-64)
+        (crow-utils vec)
         (crow-utils checked))
 
 (test-begin "checked")
@@ -78,3 +79,24 @@
   )
 (test-end "checked")
 
+(test-begin "vec")
+(test-group "vec-api"
+  (define v (make-vec 2))
+  (test-equal 2 (v 'allocated))
+  (test-equal 0 (v 'length))
+  (test-error (v 'get 0))
+  (v 'push! 1)
+  (test-equal 2 (v 'allocated))
+  (test-equal 1 (v 'length))
+  (test-equal 1 (v 'get 0))
+  (test-equal 1 (v 0))
+  (v 'push! 2)
+  (test-equal 2 (v 'allocated))
+  (v 'push! 3)
+  (test-equal 4 (v 'allocated))
+  (test-equal 3 (v 'length))
+  (test-equal 3 (v 'pop!))
+  (test-equal 2 (v 'length))
+  )
+
+(test-end "vec")
