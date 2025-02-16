@@ -8,6 +8,8 @@ I try to use R7RS style but it's mostly tested on Guile.
 
 Growable vector.
 
+The interface is a bit not schemey, more object-like. 
+
 ```scheme 
 ;; Create an empty vector with two elements allocated
 ;; (by default (make-vec) allocates 32)
@@ -32,9 +34,12 @@ Growable vector.
 (v 'length) ; => 3
 (v 'allocated) ; => 4 (allocation doubles each time it is needed)
 
-;; You can also shrink v
+;; You can also shrink v
 (v 'pop!) ; => 3 (last value)
 (v 'length) ; => 2
+
+;; List conversion
+(v '->list) ; => '(0 1)
 ```
 
 ## checked
