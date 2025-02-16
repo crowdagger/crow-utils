@@ -96,6 +96,7 @@
   (test-equal 4 (v 'allocated))
   (test-equal 3 (v 'length))
   (test-equal 3 (v 2))
+  (test-equal '(1 2 3) (v '->list))
   (v 'set! 2 42)
   (test-equal 42 (v 2))
   (test-equal 42 (v 'pop!))

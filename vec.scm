@@ -1,5 +1,6 @@
 (define-library (crow-utils vec)
   (import (scheme base)
+          (scheme write)
           (scheme case-lambda)
           (ice-9 match))
   (export make-vec)
@@ -29,11 +30,19 @@
                   (set! v new-v)))
             (vector-set! v current x)
             (set! current (+ 1 current))
-            #t)
+            (- current 1))
           (define (v-set! i value)
             "Sets the element i at value value"
             (vector-set! v i value)
             #t)
+          (define (to-list)
+            "Converts self to a list"
+            (let zeloop ([i (- current 1)]
+                     [lst '()])
+              (if (< i 0)
+                  lst
+                  (zeloop (- i 1)
+                          (cons (vector-ref v i) lst)))))
           (define (pop!)
             "Return the last element of the vector and remove it"
             (unless (positive? current)
@@ -50,6 +59,7 @@
               [('pop!) (pop!)]
               [('push! x) (push! x)]
               [('set! i v) (v-set! i v)]
+              [('->list) (to-list)]
               [('get i) (get i)]
               [(i) (get i)]
               [else (error "Invalid arguments" args)])))]))))
